@@ -1,14 +1,16 @@
 import UserModel from "../Models/UserModel.js";
 import bcrypt from "bcrypt";
-import e from "cors";
+
 export const Register = async (req, res) => {
   const { username, email, phone, name, password } = req.body;
   const salt = await bcrypt.genSalt(12);
   const hashpass = await bcrypt.hash(password, salt);
   try {
-    const olduser = await UserModel.findOne({email:email});
-    console.log(olduser)
-    if (!olduser) {
+    const oldUserByEmail = await UserModel.findOne({email:email});
+    const oldUserByPhone = await UserModel.findOne({phone:phone});
+    
+   
+    if (!oldUserByEmail && !oldUserByPhone) {
       const newUser = new UserModel({
         username,
         email,
@@ -36,10 +38,13 @@ export const Login = async (req, res) => {
   }
   try {
     const user = await UserModel.findOne({ email: email });
+    
+   
     if (user) {
       const checkpass = await bcrypt.compare(password, user.password);
       if (checkpass) {
-        res.status(200).json(user);
+        const {password,...otherdetails}=user._doc;
+        res.status(200).json(otherdetails);
       } else {
         res.status(401).json("wrong password");
       }
