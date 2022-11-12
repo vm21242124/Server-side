@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import AuthRoute from './Routes/AuthRoute.js'
 import UserRoute from './Routes/UserRoute.js'
 import dotenv from 'dotenv'
+import PostRoute from './Routes/PostRoute.js'
 // app.get('/',(req,res)=>(res.send("hello connected successfuly")))
 dotenv.config();
 const app = express();
@@ -24,4 +25,4 @@ mongoose
 app.listen(process.env.PORT, () => console.log(`listning At ${process.env.PORT}`));
 app.use('/auth',AuthRoute)
 app.use('/user',UserRoute)
-
+app.use('/post',PostRoute)
