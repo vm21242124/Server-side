@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import PostModel from "../Models/PostModel.js";
-
+import UserModel from '../Models/UserModel.js'
 export const createPost = async (req, res) => {
   const newPost = new PostModel(req.body);
   try {
@@ -72,7 +72,7 @@ export const getTimeLinePost = async (req, res) => {
   try {
     const currentUserPosts = await PostModel.find({ userId: userId });
     
-    const followingPost = await PostModel.aggregate([
+    const followingPost = await UserModel.aggregate([
       {
         $match: {
           _id: new mongoose.Types.ObjectId(userId),
