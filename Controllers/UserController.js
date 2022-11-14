@@ -3,9 +3,13 @@ import UserModel from "../Models/UserModel.js";
 export const getalluser = async (req, res) => {
   try {
     const user = await UserModel.find({ isVerified: true });
-
-    console.log(user);
-    res.status(200).json(user);
+    const arr=[]
+    for (let i = 0; i < user.length; i++) {
+      const arr1 = {name:user[i]?.name, profilepic:user[i]?.profilepic};
+      arr.push(arr1);
+    }
+   
+    res.status(200).json(arr);
   } catch (error) {
     res.status(500).json(error);
   }
