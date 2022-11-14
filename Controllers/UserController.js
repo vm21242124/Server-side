@@ -6,7 +6,7 @@ export const getalluser = async (req, res) => {
     const arr=[]
     for (let i = 0; i < user.length; i++) {
       const arr1 = {name:user[i]?.name, profilepic:user[i]?.profilepic};
-      arr.push(arr1);
+      arr.push(arr1)
     }
    
     res.status(200).json(arr);
