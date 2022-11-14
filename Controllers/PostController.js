@@ -68,7 +68,7 @@ export const likePost = async (req, res) => {
 
 export const getTimeLinePost = async (req, res) => {
   const userId = req.params.id;
-  console.log(userId)
+  // console.log(userId)
   try {
     const currentUserPosts = await PostModel.find({ userId: userId });
     
@@ -80,7 +80,7 @@ export const getTimeLinePost = async (req, res) => {
       },
       {
         $lookup: {
-          from: "PostsModels",
+          from: "PostsModel", 
           localField: "followings",
           foreignField: "userId",
           as: "followingPost",
