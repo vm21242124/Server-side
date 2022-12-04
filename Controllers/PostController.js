@@ -67,41 +67,30 @@ export const likePost = async (req, res) => {
 };
 
 export const getTimeLinePost = async (req, res) => {
-  const userId = req.params.id;
-  // console.log(userId)
+  const userid=req.params.id;
   try {
-    const currentUserPosts = await PostModel.find({ userId: userId });
+    const user=await UserModel.findById(userid);
+    const userpost=await PostModel.find({userId:user._id});
+    const friendpost=await Promise.all(
+      user.followings.map((freindid)=>{
+        return PostModel.find({userId:freindid});
+      })
+    )
+    const allpost=userpost.concat(...friendpost);
+    res.status(200).json(allpost)
     
-    const followingPost = await UserModel.aggregate([
-      {
-        $match: {
-          _id: new mongoose.Types.ObjectId(userId),
-        },
-      },
-      {
-        $lookup: {
-          from: "PostsModel", 
-          localField: "followings",
-          foreignField: "userId",
-          as: "followingPost",
-        },
-      },
-      {
-        $project: {
-          followingPost: 1,
-          _id: 0,
-        },
-      },
-    ]);
-    
-    res.status(200).json(
-      currentUserPosts
-        .concat(...followingPost[0].followingPost)
-        .sort((a, b) => {
-          return b.createdAt - a.createdAt;
-        })
-    );
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error)
   }
 };
+export const getUserTimeline= async(req,res)=>{
+  const userId=req.params.id;
+  try {
+    const user=await UserModel.findById(userId);
+    const userpost=await PostModel.find({userId:user.id});
+    res.status(200).json(userpost);
+  } catch (error) {
+    res.status(500).json(error)
+    
+  }
+}
